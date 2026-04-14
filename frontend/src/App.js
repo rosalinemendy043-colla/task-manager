@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -15,6 +16,8 @@ function App() {
   }, []);
 
   const addTask = async () => {
+    if (!title) return;
+
     await axios.post("http://localhost:5000/tasks", { title });
     setTitle("");
     getTasks();
@@ -26,22 +29,52 @@ function App() {
   };
 
   return (
-    <div className="container mt-5">
-      <h2>Task Manager</h2>
+    <div
+      style={{
+        backgroundColor: "#d2b48c",
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
+      }}
+    >
+      <div className="card p-4 shadow" style={{ width: "400px" }}>
+        
+        <h2 className="text-center mb-4">Task Manager</h2>
 
-      <input
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+        {/* INPUT + BUTTON */}
+        <div className="d-flex gap-2 mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Entrer une tâche"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
 
-      <button onClick={addTask}>Ajouter</button>
-
-      {tasks.map((task) => (
-        <div key={task.id}>
-          {task.title}
-          <button onClick={() => deleteTask(task.id)}>X</button>
+          <button onClick={addTask} className="btn btn-success">
+            Ajouter
+          </button>
         </div>
-      ))}
+
+        {/* LISTE DES TÂCHES */}
+        {tasks.map((task) => (
+          <div
+            key={task.id}
+            className="d-flex justify-content-between align-items-center mb-2"
+          >
+            <span>{task.title}</span>
+
+            <button
+              onClick={() => deleteTask(task.id)}
+              className="btn btn-danger btn-sm"
+            >
+              X
+            </button>
+          </div>
+        ))}
+
+      </div>
     </div>
   );
 }
