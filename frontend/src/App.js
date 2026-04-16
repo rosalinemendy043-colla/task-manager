@@ -7,8 +7,13 @@ function App() {
   const [title, setTitle] = useState("");
 
   const getTasks = async () => {
-    const res = await axios.get("http://localhost:5000/tasks");
-    setTasks(res.data);
+    try {
+      const res = await axios.get("/tasks");
+      console.log("DATA:", res.data);
+      setTasks(res.data);
+    } catch (err) {
+      console.log("ERROR AXIOS:", err.message);
+    }
   };
 
   useEffect(() => {
@@ -18,14 +23,22 @@ function App() {
   const addTask = async () => {
     if (!title) return;
 
-    await axios.post("http://localhost:5000/tasks", { title });
-    setTitle("");
-    getTasks();
+    try {
+      await axios.post("/tasks", { title });
+      setTitle("");
+      getTasks();
+    } catch (err) {
+      console.log("ERROR ADD:", err.message);
+    }
   };
 
   const deleteTask = async (id) => {
-    await axios.delete(`http://localhost:5000/tasks/${id}`);
-    getTasks();
+    try {
+      await axios.delete(`/tasks/${id}`);
+      getTasks();
+    } catch (err) {
+      console.log("ERROR DELETE:", err.message);
+    }
   };
 
   return (
@@ -39,7 +52,7 @@ function App() {
       }}
     >
       <div className="card p-4 shadow" style={{ width: "400px" }}>
-        
+
         <h2 className="text-center mb-4">Task Manager</h2>
 
         {/* INPUT + BUTTON */}
